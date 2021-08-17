@@ -32,7 +32,7 @@ app.get('/api/v1',async(req,res) => {
 
 app.get('/api/v1/precio/:moneda',async(req,res) => {
 
-    let moneda = "SITE";
+    let moneda = req.params.moneda;
 
     let consulta = await fetch(API)
     .catch(error =>{console.error(error)})
@@ -46,15 +46,17 @@ app.get('/api/v1/precio/:moneda',async(req,res) => {
 
   	var response = {};
 
-	let contract = await tronWeb.contract().at(addressContract);
-	let RATE = await contract.RATE().call();
-	RATE = parseInt(RATE._hex);
-
-	if(RATE != precio*10**6){
-		await contract.ChangeRate(precio*10**6).send();
-	}
+	
 
 	if (moneda == "BRUT" || moneda == "brut" || moneda == "brut_usd" || moneda == "BRUT_USD") {
+
+		let contract = await tronWeb.contract().at(addressContract);
+		let RATE = await contract.RATE().call();
+		RATE = parseInt(RATE._hex);
+
+		if(RATE != precio*10**6){
+			await contract.ChangeRate(precio*10**6).send();
+		}
 		
 	
 		response = {
