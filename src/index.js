@@ -44,6 +44,7 @@ app.get('/api/v1/precio/:moneda',async(req,res) => {
 	console.log(precio);
 
 	precio = precio[1];
+	precio = precio.replace(',', '.');
 	console.log(precio);
 
 	precio = parseFloat(precio);
