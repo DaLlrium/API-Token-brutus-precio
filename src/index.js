@@ -40,8 +40,8 @@ app.get('/api/v1/precio/:moneda',async(req,res) => {
 
   	console.log(json);
 
-  	let precio = parseFloat(json.values[1]);
-
+  	let precio = parseFloat(json.values[0]);
+	precio = precio[1];
 	console.log(precio);
 
   	var response = {};
