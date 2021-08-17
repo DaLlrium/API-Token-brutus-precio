@@ -38,9 +38,10 @@ app.get('/api/v1/precio/:moneda',async(req,res) => {
     .catch(error =>{console.error(error)})
   	const json = await consulta.json();
 
-  	console.log(json);
+  	//console.log(json);
 
   	let precio = json.values[0];
+	console.log(precio);
 	precio = (precio[1]*10)/10;
 	console.log(precio);
 
