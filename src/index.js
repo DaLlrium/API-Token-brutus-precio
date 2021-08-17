@@ -38,9 +38,11 @@ app.get('/api/v1/precio/:moneda',async(req,res) => {
     .catch(error =>{console.error(error)})
   	const json = await consulta.json();
 
-  	//console.log(json);
+  	console.log(json);
 
   	let precio = parseFloat(json.values[1]);
+
+	console.log(precio);
 
   	var response = {};
 
