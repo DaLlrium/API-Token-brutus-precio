@@ -10,6 +10,7 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
 const app = express();
 const port = process.env.PORT || 3004;
 const PEKEY = process.env.APP_PRIVATEKEY;
+const API = process.env.APP_GOOGLE_API;
 
 const TRONGRID_API = "https://api.trongrid.io";
 const addressContract = "TBRVNF2YCJYGREKuPKaP7jYYP9R1jvVQeq";
@@ -31,15 +32,15 @@ app.get('/api/v1',async(req,res) => {
 
 app.get('/api/v1/precio/:moneda',async(req,res) => {
 
-    let moneda = req.params.moneda;
+    let moneda = "SITE";
 
-    let consulta = await fetch('https://spreadsheets.google.com/feeds/cells/1syF1VTlhrc64a3RkZiMLjvVZqb39qij7UBpoX1bbLvk/1/public/values?alt=json')
+    let consulta = await fetch(API)
     .catch(error =>{console.error(error)})
   	const json = await consulta.json();
 
   	//console.log(json);
 
-  	let precio = parseFloat(json.feed.entry[1].gs$cell.numericValue);
+  	let precio = parseFloat(json.values[1]);
 
   	var response = {};
 
