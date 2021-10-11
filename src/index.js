@@ -12,6 +12,7 @@ const API = process.env.APP_GOOGLE_API;
 
 const TRONGRID_API = "https://api.trongrid.io";
 const addressContract = process.env.APP_CONTRACT || "TBRVNF2YCJYGREKuPKaP7jYYP9R1jvVQeq";
+const addressContractPool = process.env.APP_CONTRACT_POOL || "TNGkvCofQcECQFHmuwZ1119uVK8qJYU5C4";
 
 tronWeb = new TronWeb(
 	TRONGRID_API,
@@ -30,18 +31,18 @@ app.get('/api/v1/precio/:moneda',async(req,res) => {
 
     let moneda = req.params.moneda;
 
-    let consulta = await fetch(API)
-    .catch(error =>{console.error(error)})
-  	const json = await consulta.json();
-
-  	let precio = json.values[0];
-	precio = precio[1];
-	precio = precio.replace(',', '.');
-	precio = parseFloat(precio);
-
   	var response = {};
 
 	if (moneda == "BRUT" || moneda == "brut" || moneda == "brut_usd" || moneda == "BRUT_USD") {
+
+		let consulta = await fetch(API)
+		.catch(error =>{console.error(error)})
+		const json = await consulta.json();
+
+		let precio = json.values[0];
+		precio = precio[1];
+		precio = precio.replace(',', '.');
+		precio = parseFloat(precio);
 
 		let contract = await tronWeb.contract().at(addressContract);
 		let RATE = await contract.RATE().call();
@@ -53,10 +54,28 @@ app.get('/api/v1/precio/:moneda',async(req,res) => {
 		
 		response = {
 				"Ok": true,
-		    	"Message": "",
 		    	"Data": {
 		    		"precio": precio,
 		    		"par": "BRUT_USD"
+				}
+		}
+	    res.send(response);
+
+	}if (moneda == "BRST" || moneda == "brst" || moneda == "brst_usd" || moneda == "BRST_USD" || moneda == "brst_trx" || moneda == "BRST_TRX") {
+
+
+		var contractpool = await tronWeb.contract().at(addressContractPool);
+		var RATE = await contractpool.RATE().call();
+		RATE = parseInt(RATE._hex);
+		RATE = RATE/10**6;
+
+		response = {
+				"Ok": true,
+		    	"Data": {
+					"moneda": "BRST",
+		    		"trx": RATE,
+					"usd": 0
+
 				}
 		}
 	    res.send(response);
