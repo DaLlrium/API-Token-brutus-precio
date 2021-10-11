@@ -81,6 +81,9 @@ app.get('/api/v1/precio/:moneda',async(req,res) => {
 		
 		var Price = RATE * json.data.trxPrice;
 
+		Price = parseInt(Price*10**6);
+		Price = Price/10**6;
+
 		response = {
 				"Ok": true,
 		    	"Data": {
