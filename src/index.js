@@ -1,11 +1,15 @@
 const express = require('express');
 const fetch = require('node-fetch');
-
 const TronWeb = require('tronweb');
+var cors = require('cors')
+
 
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 const app = express();
+app.use(cors());
+
+
 const port = process.env.PORT || 3004;
 const PEKEY = process.env.APP_PRIVATEKEY;
 const API = process.env.APP_GOOGLE_API;
@@ -63,18 +67,26 @@ app.get('/api/v1/precio/:moneda',async(req,res) => {
 
 	}if (moneda == "BRST" || moneda == "brst" || moneda == "brst_usd" || moneda == "BRST_USD" || moneda == "brst_trx" || moneda == "BRST_TRX") {
 
-
 		var contractpool = await tronWeb.contract().at(addressContractPool);
 		var RATE = await contractpool.RATE().call();
 		RATE = parseInt(RATE._hex);
 		RATE = RATE/10**6;
+
+		let consulta = await fetch(
+			"https://api.just.network/swap/scan/statusinfo"
+		  ).catch((error) => {
+			console.error(error);
+		  });
+		var json = await consulta.json();
+		
+		var Price = RATE * json.data.trxPrice;
 
 		response = {
 				"Ok": true,
 		    	"Data": {
 					"moneda": "BRST",
 		    		"trx": RATE,
-					"usd": 0
+					"usd": Price
 
 				}
 		}
