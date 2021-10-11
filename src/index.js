@@ -89,7 +89,7 @@ app.get('/api/v1/precio/:moneda',async(req,res) => {
 		    	"Data": {
 					"moneda": "BRST",
 		    		"trx": RATE,
-					"usd": Price
+					"usdt": Price
 
 				}
 		}
