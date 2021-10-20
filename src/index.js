@@ -2,9 +2,11 @@ const express = require('express');
 const fetch = require('node-fetch');
 const TronWeb = require('tronweb');
 var cors = require('cors')
+require('dotenv').config();
 
-
-const delay = ms => new Promise(res => setTimeout(res, ms));
+function delay(ms) {
+	return new Promise(res => setTimeout(res, ms));
+}
 
 const app = express();
 app.use(cors());
@@ -17,6 +19,7 @@ const API = process.env.APP_GOOGLE_API;
 const TRONGRID_API = "https://api.trongrid.io";
 const addressContract = process.env.APP_CONTRACT || "TBRVNF2YCJYGREKuPKaP7jYYP9R1jvVQeq";
 const addressContractPool = process.env.APP_CONTRACT_POOL || "TNGkvCofQcECQFHmuwZ1119uVK8qJYU5C4";
+const addressContractBrst = process.env.APP_CONTRACT_BRST || "TF8YgHqnJdWzCbUyouje3RYrdDKJYpGfB3";
 
 tronWeb = new TronWeb(
 	TRONGRID_API,
@@ -63,7 +66,7 @@ app.get('/api/v1/precio/:moneda',async(req,res) => {
 		    		"par": "BRUT_USD"
 				}
 		}
-	    res.send(response);
+	    res.status(200).send(response);
 
 	}if (moneda == "BRST" || moneda == "brst" || moneda == "brst_usd" || moneda == "BRST_USD" || moneda == "brst_trx" || moneda == "BRST_TRX") {
 
@@ -94,6 +97,33 @@ app.get('/api/v1/precio/:moneda',async(req,res) => {
 				}
 		}
 	    res.send(response);
+
+	}else{
+
+		response = {
+				"Ok": false,
+		    	"Message": "No exciste o está mal escrito verifica que tu token si esté listado",
+		    	"Data": {}
+		}
+	    res.send(response);
+
+	}
+});
+
+app.get('/api/v1/data/:peticion',async(req,res) => {
+
+    let peticion = req.params.peticion;
+
+  	var response = {};
+
+	if (peticion == "circulating" || peticion == "totalcoins" ) {
+
+		let contract = await tronWeb.contract().at(addressContractBrst);
+		let SUPPLY = await contract.totalSupply().call();
+		SUPPLY = parseInt(SUPPLY._hex);
+
+		response = SUPPLY/10**6;
+	    res.status(200).send(`${response}`);
 
 	}else{
 
