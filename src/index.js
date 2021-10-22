@@ -18,7 +18,7 @@ const API = process.env.APP_GOOGLE_API;
 
 const TRONGRID_API = "https://api.trongrid.io";
 const addressContract = process.env.APP_CONTRACT || "TBRVNF2YCJYGREKuPKaP7jYYP9R1jvVQeq";
-const addressContractPool = process.env.APP_CONTRACT_POOL || "TNGkvCofQcECQFHmuwZ1119uVK8qJYU5C4";
+const addressContractPool = process.env.APP_CONTRACT_POOL || "TMzxRLeBwfhm8miqm5v2qPw3P8rVZUa3x6";
 const addressContractBrst = process.env.APP_CONTRACT_BRST || "TF8YgHqnJdWzCbUyouje3RYrdDKJYpGfB3";
 
 tronWeb = new TronWeb(
